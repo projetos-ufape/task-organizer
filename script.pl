@@ -83,6 +83,4 @@ main :-
     ordenar_tarefas(Ordenadas),
     write('Tarefas ordenadas:'), nl,
     imprimir_tarefas(Ordenadas),
-    halt.
-
-:- initialization(main).
+    halt. 
