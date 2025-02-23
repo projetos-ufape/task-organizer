@@ -1,5 +1,6 @@
 services:
   app:
+    image: task-organizer
     build: .
     volumes:
       - .:/app
