@@ -5,4 +5,4 @@ services:
       - .:/app
     ports:
       - "3000:3000"
-    command: ["node", "index.js"]
+    command: ["node", "src/index.js"]
