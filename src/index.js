@@ -10,11 +10,11 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(html);
     } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end(`Erro: ${err.message}`);
     }
   } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Página não encontrada');
   }
 });

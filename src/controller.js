@@ -1,8 +1,10 @@
-const { getSortedTasksFromService } = require('./service');
+const { TaskService } = require('./service');
+
+const service = new TaskService();
 
 async function getSortedTasks() {
   try {
-    return await getSortedTasksFromService();
+    return await service.getSortedTasks();
   } catch (err) {
     throw new Error('Erro ao obter tarefas: ' + err.message);
   }
