@@ -10,4 +10,12 @@ async function getSortedTasks() {
   }
 }
 
-module.exports = { getSortedTasks };
+async function createTask(task) {
+  try {
+    return await service.createTask(task);
+  } catch (err) {
+    throw new Error('Erro ao criar tarefa: ' + err.message);
+  }
+}
+
+module.exports = { getSortedTasks, createTask };

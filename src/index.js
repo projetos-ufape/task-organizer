@@ -1,11 +1,13 @@
 const http = require('http');
-const { getSortedTasks } = require('./controller');
+const { getSortedTasks, createTask } = require('./controller');
+const { listTasksView } = require('./views/list_tasks');
+const { createTaskView } = require('./views/create_task');
 
 const server = http.createServer(async (req, res) => {
   if (req.url === '/') {
     try {
       const tasks = await getSortedTasks();
-      let html = generateHTML(tasks);
+      let html = listTasksView(tasks);
       
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(html);
@@ -13,6 +15,40 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end(`Erro: ${err.message}`);
     }
+  } else if (req.url === '/task' && req.method === 'GET') {
+    try {
+      let html = createTaskView();
+      
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(html);
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end(`Erro: ${err.message}`);
+    }
+  } else if (req.url === '/task' && req.method === 'POST') { 
+    let body = '';
+    
+    req.on('data', chunk => {
+      body += chunk;
+    });
+    
+    req.on('end', async () => {
+      try {         
+        const formData = new URLSearchParams(body);
+        await createTask(Object.fromEntries(formData.entries()));
+  
+        res.writeHead(302, { 'Location': '/' });
+        res.end();
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end(`Erro: ${err.message}`);
+      }
+    });
+    
+    req.on('error', (err) => {
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end(`Erro: ${err.message}`);
+    });
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Página não encontrada');
@@ -22,37 +58,3 @@ const server = http.createServer(async (req, res) => {
 server.listen(3000, () => {
   console.log('Servidor rodando em http://localhost:3000');
 });
-
-function generateHTML(tasks) {
-  return `
-    <html>
-    <head>
-      <title>Lista de Tarefas</title>
-      <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .task { border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px; }
-        .alta { background-color: #ffcccc; }
-        .media { background-color: #fff3cd; }
-        .baixa { background-color: #d4edda; }
-      </style>
-    </head>
-    <body>
-      <h1>Tarefas Ordenadas</h1>
-      ${tasks.map(task => generateTaskHTML(task)).join('')}
-    </body>
-    </html>
-  `;
-}
-
-function generateTaskHTML(task) {
-  return `
-    <div class="task ${task.prioridade}">
-      <h2>${task.nome}</h2>
-      <p><strong>Prioridade:</strong> ${task.prioridade}</p>
-      <p><strong>Prazo:</strong> ${task.prazo}</p>
-      <p><strong>Concluída:</strong> ${task.concluida}</p>
-      <p><strong>Peso (dias):</strong> ${task.pesoDias}</p>
-      <p><strong>Data de Adição:</strong> ${task.dataAdicao}</p>
-    </div>
-  `;
-}
