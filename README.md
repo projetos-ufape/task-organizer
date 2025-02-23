@@ -1,57 +1,59 @@
+Aqui está a nova versão do seu README, considerando a utilização do Docker Compose e a estrutura atual:
+
+---
+
 # Task Organizer - Prolog
 
-Este projeto é um organizador de tarefas escrito em **Prolog** e executado dentro de um contêiner **Docker**.
+Este projeto é um organizador de tarefas desenvolvido em **Prolog** e executado dentro de contêineres **Docker**, com **Docker Compose** para facilitar o gerenciamento dos contêineres.
 
-Projeto elabora para uma atividade na matéria de Iteligência Artificial no curso de Bacharelado em Ciência da Computação na Universidade Federal do Agreste de Pernambuco(UFAPE).
+Projeto desenvolvido como parte da matéria de **Inteligência Artificial** no curso de **Bacharelado em Ciência da Computação** da **Universidade Federal do Agreste de Pernambuco (UFAPE)**.
 
 ## Requisitos
 
 - [Docker](https://www.docker.com/get-started) instalado na máquina
+- [Docker Compose](https://docs.docker.com/compose/install/) instalado na máquina
+
+## Estrutura do Projeto
+
+```
+- docker-compose.yaml    # Arquivo de configuração do Docker Compose
+- Dockerfile             # Arquivo Dockerfile para criar a imagem do contêiner
+- index.js               # Código JavaScript para interagir com Prolog via Node.js
+- tasks.pl               # Código Prolog com os predicados para organização de tarefas
+- README.md              # Este arquivo
+```
 
 ## Configuração e Execução
 
-### 1. Construir a imagem Docker
-Execute o seguinte comando na raiz do projeto para criar a imagem:
+### 1. Configuração do Docker Compose
+
+Certifique-se de ter o **Docker Compose** instalado em sua máquina e, em seguida, crie e inicie os contêineres usando o seguinte comando:
 
 ```sh
-docker build -t prolog-task-organizer .
+docker-compose up --build
 ```
 
-### 2. Iniciar o contêiner e carregar o script automaticamente
-O script `script.pl` será carregado automaticamente ao iniciar o contêiner:
+Este comando irá construir a imagem e iniciar os contêineres automaticamente. O serviço estará disponível na porta **3000**.
 
-```sh
-docker run -it --rm -v $(pwd):/app prolog-task-organizer
-```
+### 2. Interação com o Prolog via Node.js
 
-Ou no **Windows (PowerShell)**:
+O arquivo **index.js** é responsável por interagir com o código Prolog, executando tarefas como adicionar e listar as tarefas. Ele chama o Prolog para ordenar as tarefas e exibir os resultados em um formato web.
 
-```sh
-docker run -it --rm -v ${PWD}:/app prolog-task-organizer
-```
+- O arquivo **tasks.pl** contém a lógica de Prolog, incluindo predicados para adicionar e ordenar tarefas.
+- O **Node.js** é usado para executar o Prolog, capturar a saída e exibir as tarefas ordenadas em um servidor web simples.
 
-Você pode começar a usar os predicados disponíveis diretamente:
+### 3. Acessando as Tarefas
 
-```prolog
-?- listar_tarefas.
-?- adicionar_tarefa('Nova Tarefa', alta, '2024-02-18', 3, '2024-02-17').
-?- listar_pendentes.
-```
+Após iniciar os contêineres, você pode acessar o servidor web em [http://localhost:3000](http://localhost:3000) para visualizar as tarefas ordenadas.
 
-### 3. Sair do SWI-Prolog
-Para sair do Prolog, use:
+## Predicados Disponíveis no Prolog
 
-```prolog
-?- halt.
-```
-
-Ou pressione `Ctrl + D`.
-
+- `listar_tarefas.` - Exibe todas as tarefas armazenadas.
+- `adicionar_tarefa(Nome, Prioridade, Prazo, Concluida, PesoDias, DataAdicao).` - Adiciona uma nova tarefa à base de dados.
+- `listar_pendentes.` - Exibe todas as tarefas pendentes (não concluídas).
 
 ## Considerações
-- O código é montado no contêiner via `-v $(pwd):/app`, permitindo alterações no código sem precisar reconstruir a imagem.
-- O contêiner roda no modo **interativo**, facilitando o uso de comandos Prolog.
 
----
-Agora você está pronto para organizar suas tarefas com Prolog e Docker! 🚀
-
+- O código local é montado diretamente no contêiner, o que permite editar o código e ver as mudanças sem precisar rebuildar a imagem Docker.
+- O contêiner roda em modo interativo, permitindo que você use comandos Prolog diretamente dentro do ambiente.
+  
