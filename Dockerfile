@@ -1,4 +1,4 @@
-FROM swipl
+FROM node:22
 WORKDIR /app
-COPY script.pl /app/script.pl
-CMD ["swipl", "-s", "script.pl"]
+RUN apt-get update && apt-get install -y swi-prolog
+CMD ["node", "index.js"]
